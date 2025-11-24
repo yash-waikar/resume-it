@@ -10,19 +10,14 @@ import { config } from "./config"
 import { getDocument, GlobalWorkerOptions, version as pdfjsVersion } from "pdfjs-dist/build/pdf"
 
 export default function HomePage() {
-  // Configure PDF.js worker (required in browsers)
   try {
-    // Use exact library version to avoid mismatches
     GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsVersion}/build/pdf.worker.min.mjs`
   } catch (_) {}
   const [uploadedResume, setUploadedResume] = useState(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [aiFeedback, setAiFeedback] = useState(null)
-  const [apiKey] = useState(config.GEMINI_API_KEY)
+  const [apiKey] = useState(config.OPENROUTER_API_KEY)
 
-  // API key is now loaded from config
-
-  // No provider handling needed; always Gemini
 
   const [isParsing, setIsParsing] = useState(false)
   const [parsePercent, setParsePercent] = useState(0)
@@ -90,7 +85,7 @@ export default function HomePage() {
     if (file) {
       try {
         if (!file.type || !file.type.includes("pdf")) {
-          // continue; many browsers still parse fine without strict type
+
           console.warn("File type not reported as PDF, attempting parse anyway")
         }
         setIsParsing(true)
@@ -105,7 +100,7 @@ export default function HomePage() {
         })
         setUploadedResume({ text, fileName: file.name, pageCount })
         setAiFeedback(null)
-        // Auto-analyze if API key is present
+      
         if (apiKey) {
           setTimeout(() => {
             analyzeResume().catch(() => {})
@@ -199,7 +194,7 @@ export default function HomePage() {
                 Have a resume already? Upload your PDF and we'll help you improve and customize it with AI.
               </p>
 
-              {/* Using Gemini only; provider UI removed */}
+              {/* Using OpenRouter with Grok model */}
 
               <div className="relative mb-3">
                 <input
